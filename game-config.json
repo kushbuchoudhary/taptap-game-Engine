@@ -1,0 +1,51 @@
+{
+  "game": {
+    "title": "Math Tap Challenge",
+    "description": "A fast-paced learning game where players solve math problems by tapping the correct answer.",
+    "version": "1.0",
+    "maxLevels": 3
+  },
+
+  "player": {
+    "lives": 3,
+    "startingScore": 0
+  },
+
+  "timer": {
+    "enabled": true,
+    "timeLimitSeconds": 60
+  },
+
+  "scoring": {
+    "correctAnswer": 10,
+    "wrongAnswer": -5,
+    "levelCompletionBonus": 50
+  },
+
+  "levels": [
+    {
+      "levelId": 1,
+      "difficulty": "easy",
+      "questionType": "addition",
+      "questionsCount": 5
+    },
+    {
+      "levelId": 2,
+      "difficulty": "medium",
+      "questionType": "subtraction",
+      "questionsCount": 5
+    },
+    {
+      "levelId": 3,
+      "difficulty": "hard",
+      "questionType": "multiplication",
+      "questionsCount": 5
+    }
+  ],
+
+  "ui": {
+    "theme": "light",
+    "showScore": true,
+    "showTimer": true
+  }
+}
