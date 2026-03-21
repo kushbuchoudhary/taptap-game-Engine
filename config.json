@@ -1,0 +1,21 @@
+{
+  "screen": {
+    "width": 600,
+    "height": 700,
+    "fps": 60
+  },
+  "physics": {
+    "gravity": 0.35,
+    "jump_force": -9
+  },
+  "pipes": {
+    "speed": 3,
+    "width": 60,
+    "gap": 180,
+    "spawn_interval": 1800
+  },
+  "bird": {
+    "size": 40,
+    "start_x": 100
+  }
+}
