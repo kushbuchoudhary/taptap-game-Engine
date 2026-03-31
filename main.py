@@ -111,7 +111,6 @@ alien_dir = 1
 space_score = 0
 space_timer = 0
 missed_bullets = 0
-space_missed = 0
 
 def reset_flappy():
     global bird_x, bird_y, bird_velocity, pipes, score, pipe_timer
@@ -153,7 +152,7 @@ def reset_snake():
     snake_timer = 0
 
 def reset_space():
-    global player_x, bullets, aliens, alien_speed, alien_dir, space_score, space_timer, missed_bullets, space_missed
+    global player_x, bullets, aliens, alien_speed, alien_dir, space_score, space_timer, missed_bullets
     player_x = WIDTH//2
     bullets = []
     aliens = []
@@ -165,7 +164,6 @@ def reset_space():
     space_score = 0
     space_timer = 0
     missed_bullets = 0
-    space_missed = 0
 
 def draw_bird(x, y):
     # Draw bird body (larger, oval)
@@ -407,14 +405,7 @@ while True:
         
         for alien in aliens:
             if alien[1] >= HEIGHT - 50:
-                space_missed += 1
-                if space_missed >= config["space"]["miss_limit"]:
-                    state = MENU
-                else:
-                    aliens = []
-                    for i in range(config["space"]["alien_rows"]):
-                        for j in range(config["space"]["alien_cols"]):
-                            aliens.append([50 + j*60, 50 + i*40])
+                state = MENU
                 break
         
         pygame.draw.rect(screen, WHITE, (player_x, HEIGHT - 50, 30, 20))
@@ -423,8 +414,6 @@ while True:
         for a in aliens:
             pygame.draw.rect(screen, RED, (a[0], a[1], 30, 20))
         draw_text("Score: " + str(space_score), 10, 10)
-        draw_text("Missed Bullets: " + str(missed_bullets) + "/" + str(config["space"]["miss_limit"]), WIDTH - 320, 10)
-        draw_text("Aliens Reached Bottom: " + str(space_missed) + "/" + str(config["space"]["miss_limit"]), WIDTH - 420, 40)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

@@ -7,7 +7,7 @@ A sophisticated collection of 5 mini-games in a single application with **dynami
 1. **Flappy Bird** - Navigate through pipes avoiding obstacles. Score increases with each pipe passed.
 2. **Arrow Shooter** - Shoot moving targets with arrows. Game ends after missing 3 times (miss_limit in JSON).
 3. **Breakout** - Classic brick breaker. Move paddle to bounce ball and destroy bricks.
-4. **Space Invaders** - Defend against alien invaders with open-ended shots. Game ends after 3 missed shots or 3 alien bottom breaches (no lives).
+4. **Space Invaders** - Defend against alien invaders with simple classic rules. Game ends after 3 missed shots (no lives or bottom counters displayed).
 5. **Snake** - Eat food to grow longer. Avoid walls and colliding with yourself.
 
 ## ⚙️ Dynamic Configuration System
