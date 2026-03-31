@@ -1,0 +1,38 @@
+{
+  "screen": {
+    "width": 800,
+    "height": 600,
+    "fps": 60
+  },
+  "flappy": {
+    "physics": {
+      "gravity": 0.5,
+      "jump_force": -10
+    },
+    "pipes": {
+      "speed": 4,
+      "width": 60,
+      "gap": 150,
+      "spawn_interval": 1500
+    },
+    "bird": {
+      "size": 40,
+      "start_x": 100
+    }
+  },
+  "arrow": {
+    "arrow_speed": -10,
+    "target_speed": 3,
+    "miss_limit": 5
+  },
+  "breakout": {
+    "paddle_speed": 5,
+    "ball_speed": 5,
+    "brick_rows": 5,
+    "brick_cols": 10
+  },
+  "snake": {
+    "speed": 10,
+    "segment_size": 20
+  }
+}
