@@ -37,6 +37,7 @@ FLAPPY = 1
 ARROW = 2
 BREAKOUT = 3
 SNAKE = 4
+SPACE = 5
 
 state = MENU
 
@@ -51,8 +52,14 @@ def draw_button(text, x, y, width, height, color, hover_color):
     else:
         pygame.draw.rect(screen, color, (x, y, width, height))
     pygame.draw.rect(screen, WHITE, (x, y, width, height), 2)
-    img = font_small.render(text, True, BLACK)
-    screen.blit(img, (x + 10, y + 10))
+    # Create smaller font for button text
+    btn_font = pygame.font.Font(None, 24)
+    img = btn_font.render(text, True, BLACK)
+    # Center text in button
+    text_rect = img.get_rect()
+    text_x = x + (width - text_rect.width) // 2
+    text_y = y + (height - text_rect.height) // 2
+    screen.blit(img, (text_x, text_y))
     return False
 
 def draw_text(text, x, y, font=font_medium, color=WHITE):
@@ -95,6 +102,17 @@ food = []
 snake_score = 0
 snake_timer = 0
 
+# Space Invaders variables
+player_x = WIDTH//2
+bullets = []
+aliens = []
+alien_speed = 2
+alien_dir = 1
+space_score = 0
+lives = 3
+space_timer = 0
+missed_bullets = 0
+
 def reset_flappy():
     global bird_x, bird_y, bird_velocity, pipes, score, pipe_timer
     bird_x = config["flappy"]["bird"]["start_x"]
@@ -134,6 +152,21 @@ def reset_snake():
     snake_score = 0
     snake_timer = 0
 
+def reset_space():
+    global player_x, bullets, aliens, alien_speed, alien_dir, space_score, lives, space_timer, missed_bullets
+    player_x = WIDTH//2
+    bullets = []
+    aliens = []
+    for i in range(config["space"]["alien_rows"]):
+        for j in range(config["space"]["alien_cols"]):
+            aliens.append([50 + j*60, 50 + i*40])
+    alien_speed = config["space"]["alien_speed"]
+    alien_dir = 1
+    space_score = 0
+    lives = 3
+    space_timer = 0
+    missed_bullets = 0
+
 def draw_bird(x, y):
     # Draw bird body (larger, oval)
     pygame.draw.ellipse(screen, YELLOW, (x + 10, y + 10, 20, 15))
@@ -165,18 +198,21 @@ while True:
         if draw_button("Hard", 350, 160, 120, 50, RED, WHITE):
             load_config("hard.json")
         draw_text("Select Game:", 50, 240, font_medium, WHITE)
-        if draw_button("Flappy Bird", 50, 280, 160, 50, BLUE, WHITE):
+        if draw_button("Flappy Bird", 50, 280, 180, 50, BLUE, WHITE):
             state = FLAPPY
             reset_flappy()
-        if draw_button("Arrow Shooter", 250, 280, 160, 50, GREEN, WHITE):
+        if draw_button("Arrow Shooter", 270, 280, 180, 50, GREEN, WHITE):
             state = ARROW
             reset_arrow()
-        if draw_button("Breakout", 50, 350, 160, 50, RED, WHITE):
+        if draw_button("Breakout", 50, 350, 180, 50, RED, WHITE):
             state = BREAKOUT
             reset_breakout()
-        if draw_button("Snake", 250, 350, 160, 50, PURPLE, WHITE):
+        if draw_button("Snake", 270, 350, 180, 50, PURPLE, WHITE):
             state = SNAKE
             reset_snake()
+        if draw_button("Space Invaders", 490, 280, 180, 50, YELLOW, WHITE):
+            state = SPACE
+            reset_space()
         draw_text("Click buttons to play!", 250, 450, font_small, WHITE)
 
     elif state == FLAPPY:
@@ -328,6 +364,76 @@ while True:
                 pygame.draw.ellipse(screen, GREEN, (segment[0], segment[1], config["snake"]["segment_size"], config["snake"]["segment_size"] - 2))
         pygame.draw.ellipse(screen, RED, (food[0], food[1], config["snake"]["segment_size"], config["snake"]["segment_size"]))
         draw_text("Score: " + str(snake_score), 10, 10)
+
+    elif state == SPACE:
+        # Space Invaders logic
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and player_x > 0:
+            player_x -= config["space"]["player_speed"]
+        if keys[pygame.K_RIGHT] and player_x < WIDTH - 30:
+            player_x += config["space"]["player_speed"]
+        if keys[pygame.K_SPACE]:
+            bullets.append([player_x + 15, HEIGHT - 50])
+        
+        bullets = [b for b in bullets if b[1] > 0]
+        # Track missed bullets
+        bullets_to_remove = []
+        for i, b in enumerate(bullets):
+            if b[1] < 0:
+                bullets_to_remove.append(i)
+                missed_bullets += 1
+                if missed_bullets >= 3:
+                    state = MENU
+        
+        # Remove bullets that went off screen
+        for i in reversed(bullets_to_remove):
+            bullets.pop(i)
+        
+        for b in bullets:
+            b[1] += config["space"]["bullet_speed"]
+        
+        move_down = False
+        for alien in aliens:
+            alien[0] += config["space"]["alien_speed"] * alien_dir
+            if alien[0] <= 0 or alien[0] >= WIDTH - 30:
+                move_down = True
+        
+        if move_down:
+            alien_dir *= -1
+            for alien in aliens:
+                alien[1] += 20
+            alien_speed += 0.5
+        
+        for bullet in bullets[:]:
+            for alien in aliens[:]:
+                if alien[0] < bullet[0] < alien[0] + 30 and alien[1] < bullet[1] < alien[1] + 20:
+                    if bullet in bullets:
+                        bullets.remove(bullet)
+                    if alien in aliens:
+                        aliens.remove(alien)
+                    space_score += 10
+                    break
+        
+        for alien in aliens:
+            if alien[1] >= HEIGHT - 50:
+                lives -= 1
+                if lives <= 0:
+                    state = MENU
+                else:
+                    aliens = []
+                    for i in range(config["space"]["alien_rows"]):
+                        for j in range(config["space"]["alien_cols"]):
+                            aliens.append([50 + j*60, 50 + i*40])
+                break
+        
+        pygame.draw.rect(screen, WHITE, (player_x, HEIGHT - 50, 30, 20))
+        for b in bullets:
+            pygame.draw.rect(screen, GREEN, (b[0], b[1], 5, 10))
+        for a in aliens:
+            pygame.draw.rect(screen, RED, (a[0], a[1], 30, 20))
+        draw_text("Score: " + str(space_score), 10, 10)
+        draw_text("Lives: " + str(lives), WIDTH - 150, 10)
+        draw_text("Missed: " + str(missed_bullets) + "/3", WIDTH - 200, 40)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

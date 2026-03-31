@@ -34,5 +34,12 @@
   "snake": {
     "speed": 12,
     "segment_size": 20
+  },
+  "space": {
+    "player_speed": 4,
+    "bullet_speed": -5,
+    "alien_speed": 1,
+    "alien_rows": 3,
+    "alien_cols": 8
   }
 }
