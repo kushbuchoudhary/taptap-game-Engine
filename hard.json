@@ -40,6 +40,7 @@
     "bullet_speed": -9,
     "alien_speed": 3,
     "alien_rows": 6,
-    "alien_cols": 12
+    "alien_cols": 12,
+    "miss_limit": 3
   }
 }

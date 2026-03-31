@@ -5,9 +5,9 @@ A sophisticated collection of 5 mini-games in a single application with **dynami
 ## 🎯 Games Included
 
 1. **Flappy Bird** - Navigate through pipes avoiding obstacles. Score increases with each pipe passed.
-2. **Arrow Shooter** - Shoot moving targets with arrows. Game ends after missing 5 times.
+2. **Arrow Shooter** - Shoot moving targets with arrows. Game ends after missing 3 times (miss_limit in JSON).
 3. **Breakout** - Classic brick breaker. Move paddle to bounce ball and destroy bricks.
-4. **Space Invaders** - Defend against alien invaders using bullets. Avoid alien fire!
+4. **Space Invaders** - Defend against alien invaders with open-ended shots. Game ends after 3 missed shots or 3 alien bottom breaches (no lives).
 5. **Snake** - Eat food to grow longer. Avoid walls and colliding with yourself.
 
 ## ⚙️ Dynamic Configuration System
@@ -23,7 +23,7 @@ The entire game engine is **configurable through JSON files** without touching a
 All gameplay mechanics are externally defined:
 - Physics (gravity, jump force)
 - Speeds (player, bullet, enemy, pipes)
-- Difficulty (miss limits, brick counts, alien formations)
+- Difficulty (arrow miss limit, space miss limit, brick counts, alien formations)
 - Game dimensions and spawn rates
 
 **Select difficulty level from menu before choosing a game - all selected game will use those parameters!**
